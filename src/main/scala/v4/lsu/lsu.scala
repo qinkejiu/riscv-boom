@@ -780,10 +780,10 @@ class LSU(implicit p: Parameters, edge: TLEdgeOut) extends BoomModule()(p)
   val pf_st  = widthMap(w => dtlb.io.resp(w).pf.st && exe_tlb_uop(w).uses_stq)
   val ae_ld  = widthMap(w => dtlb.io.resp(w).ae.ld && exe_tlb_uop(w).uses_ldq)
   val ae_st  = widthMap(w => dtlb.io.resp(w).ae.st && exe_tlb_uop(w).uses_stq)
-  val dbg_bp = widthMap(w => bkptu(w).io.debug_st && ((exe_tlb_uop(w).uses_ldq && bkptu(w).io.debug_ld) ||
-                                                      (exe_tlb_uop(w).uses_stq && bkptu(w).io.debug_st && !exe_tlb_uop(w).is_fence)))
-  val bp     = widthMap(w => bkptu(w).io.debug_st && ((exe_tlb_uop(w).uses_ldq && bkptu(w).io.xcpt_ld) ||
-                                                      (exe_tlb_uop(w).uses_stq && bkptu(w).io.xcpt_st && !exe_tlb_uop(w).is_fence)))
+  val dbg_bp = widthMap(w => (exe_tlb_uop(w).uses_ldq && bkptu(w).io.debug_ld) ||
+                             (exe_tlb_uop(w).uses_stq && bkptu(w).io.debug_st && !exe_tlb_uop(w).is_fence))
+  val bp     = widthMap(w => (exe_tlb_uop(w).uses_ldq && bkptu(w).io.xcpt_ld) ||
+                             (exe_tlb_uop(w).uses_stq && bkptu(w).io.xcpt_st && !exe_tlb_uop(w).is_fence))
 
 
   // TODO check for xcpt_if and verify that never happens on non-speculative instructions.
